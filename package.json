@@ -3,13 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port=3003",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
+    "gl-matrix": "^3.3.0",
+    "jsnes": "git://github.com/bfirsh/jsnes.git",
     "next": "9.5.2",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "ringbufferjs": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.6.0",
+    "@types/react": "^16.9.46",
+    "@types/ringbufferjs": "^1.1.0",
+    "typescript": "^3.9.7"
   }
 }
