@@ -40,19 +40,30 @@ export default class KeyboardController {
   private keys = KEYS
 
   // 上， 右， 下， 左， select， start， B, A
-  public key_state = [0, 0, 0, 0, 0, 0, 0, 0]
+  // public key_state = [0, 0, 0, 0, 0, 0, 0, 0]
+  public key_state = new Uint8Array(10)
 
   constructor(private player: number, private onButtonDown: OnButton, private onButtonUp: OnButton) {
   }
 
+  public from_key_state(player: number, key_state: number[]) {
+    for (let k in key_state) {
+      if (key_state[k]) {
+        this.onButtonDown(player, Number(k))
+      } else {
+        this.onButtonUp(player, Number(k))
+      }
+    }
+  }
+
   private onKeyDown(key: number) {
     this.key_state[key] = 1
-    this.onButtonDown(this.player, key)
+    // this.onButtonDown(this.player, key)
   }
 
   private onKeyUp(key: number) {
     this.key_state[key] = 0
-    this.onButtonUp(this.player, key)
+    // this.onButtonUp(this.player, key)
   }
 
   turbo() {

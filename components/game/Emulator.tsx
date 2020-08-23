@@ -6,6 +6,7 @@ import KeyboardController from './KeyboardController'
 import FrameTimer from './FrameTimer'
 import styles from './game.module.css'
 import CanvasScreen from './CanvasScreen'
+import Room from './Room'
 
 const SCREEN_WIDTH = 256;
 const SCREEN_HEIGHT = 240;
@@ -90,15 +91,17 @@ export default function Emulator(props: EmulatorProps) {
       sampleRate: speakers.getSampleRate()
     })
 
-    const keyboardController = new KeyboardController(1, nes.buttonDown, nes.buttonUp)
-    document.addEventListener("keydown", keyboardController.handleKeyDown)
-    document.addEventListener("keyup", keyboardController.handleKeyUp)
+    // const keyboardController = new KeyboardController(1, nes.buttonDown, nes.buttonUp)
+    // document.addEventListener("keydown", keyboardController.handleKeyDown)
+    // document.addEventListener("keyup", keyboardController.handleKeyUp)
 
     // const socket = new WebSocket('ws://127.0.0.1:9766/')
+    const room = new Room(nes)
 
     const frameTimer = new FrameTimer(
       () => {
-        keyboardController.turbo()
+        // keyboardController.turbo()
+        room.frame()
         nes.frame()
       },
       () => {
@@ -107,20 +110,25 @@ export default function Emulator(props: EmulatorProps) {
       }
     )
     console.log('ooo======================================================o');
+    const onWindowClick = () => {
+      speakers.start()
+    }
     loadRom()
       .then((rom) => {
         // console.log(rom)
         nes.loadROM(rom)
         frameTimer.start()
-        speakers.start()
+        window.addEventListener('click', onWindowClick)
         setInterval(() => {
           console.log(`FPS: ${nes.getFPS()}`)
-          console.log(keyboardController.key_state)
+          // console.log(keyboardController.key_state)
         }, 1000)
       })
     return () => {
-      document.removeEventListener('keydown', keyboardController.handleKeyDown)
-      document.removeEventListener('keyup', keyboardController.handleKeyUp)
+      window.removeEventListener('click', onWindowClick)
+      // document.removeEventListener('keydown', keyboardController.handleKeyDown)
+      // document.removeEventListener('keyup', keyboardController.handleKeyUp)
+      room.release()
       frameTimer.stop()
       speakers.stop()
     }

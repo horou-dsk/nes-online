@@ -2,6 +2,10 @@ import RingBuffer from 'ringbufferjs';
 
 type OnBufferUnderRun = (actualSize: number, desiredSize: number) => void
 
+function WebAudioContext() {
+  return window.AudioContext || window.webkitAudioContext
+}
+
 export default class Speakers {
 
   onBufferUnderrun: OnBufferUnderRun
@@ -14,30 +18,36 @@ export default class Speakers {
 
   scriptNode: ScriptProcessorNode | undefined
 
+  isStart = false
+
   constructor({ onBufferUnderrun }: { onBufferUnderrun: OnBufferUnderRun }) {
     this.onBufferUnderrun = onBufferUnderrun
   }
 
   public getSampleRate() {
-    if (!window.AudioContext) {
+    const AudioContext = WebAudioContext()
+    if (!AudioContext) {
       return 44100
     }
-    let myCtx = new window.AudioContext()
+    let myCtx = new AudioContext()
     let sampleRate = myCtx.sampleRate
     myCtx.close()
     return sampleRate
   }
 
   start() {
+    if (this.isStart) return
+    const AudioContext = WebAudioContext()
     // Audio is not supported
-    if (!window.AudioContext) {
-      return;
+    if (!AudioContext) {
+      return console.error('Audio is not supported');
     }
-    this.audioCtx = new window.AudioContext();
+    this.audioCtx = new AudioContext();
     this.scriptNode = this.audioCtx.createScriptProcessor(1024, 0, 2);
     this.scriptNode?.addEventListener('audioprocess', this.onaudioprocess)
     // this.scriptNode.onaudioprocess = this.onaudioprocess;
     this.scriptNode.connect(this.audioCtx.destination);
+    this.isStart = true
   }
 
   stop() {
@@ -50,9 +60,11 @@ export default class Speakers {
       this.audioCtx.close().catch(err => console.error(err));
       this.audioCtx = undefined;
     }
+    this.isStart = false
   }
 
   writeSample = (left: number, right: number) => {
+    if (!this.isStart) return
     if (this.buffer.size() / 2 >= this.bufferSize) {
       console.log(`Buffer overrun`);
       this.buffer.deqN(this.bufferSize / 2);
