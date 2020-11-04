@@ -1,6 +1,6 @@
 import KeyboardController from './KeyboardController'
 
-type OnButton = (player: number, keyCode: number) => void
+// type OnButton = (player: number, keyCode: number) => void
 
 function Message(data: {[key: string]: any}) {
   return JSON.stringify(data)
@@ -19,7 +19,7 @@ export default class Room {
     return this._paused
   }
 
-  socket = new WebSocket('ws://127.0.0.1:8778/')
+  socket = new WebSocket('ws://127.0.0.1:8778/ws/')
 
   keyboardController = new KeyboardController(1, this.nes.buttonDown, this.nes.buttonUp)
 
