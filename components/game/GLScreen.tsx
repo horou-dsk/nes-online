@@ -1,14 +1,14 @@
 import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from 'react'
 import styles from './game.module.css'
 import {mat4} from 'gl-matrix'
-// import vertex from './shader/custom-crt02/vertex.glsl'
-// import fragment from './shader/custom-crt02/fragment.glsl'
+import vertex from './shader/custom-crt02/vertex.glsl'
+import fragment from './shader/custom-crt02/fragment.glsl'
 import BuilderShader from '../../lib/shader'
 
 const SCREEN_WIDTH = 256 * 4;
 const SCREEN_HEIGHT = 240 * 4;
 
-const vertex = `#version 300 es
+/*const vertex = `#version 300 es
 precision mediump float;
 
 layout (location = 0) in vec2 VertexCoord;
@@ -38,11 +38,11 @@ uniform vec3 iResolution;
 //uniform sampler2D texture2;
 //uniform float visible;
 
-/*void main() {
+/!*void main() {
 //    FragColor = mix(texture(texture1, TEX0), texture(texture2, vec2(1.0 - TEX0.x, TEX0.y)), visible);
     FragColor = texture(texture1, TEX0);
 //    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
-}*/
+}*!/
 #define SCAN_LINE_MULT 1250.0
 
 vec2 curve(vec2 uv)
@@ -78,23 +78,23 @@ void DrawScanline( inout vec3 color, vec2 uv )
     color *= scanline * grille * 1.2;
 }
 
-/*void blurry(inout vec3 color, vec2 uv) {
+/!*void blurry(inout vec3 color, vec2 uv) {
     if (color.r == 0.0 && color.g == 0.0 && color.b == 0.0) {
 
     }
-}*/
+}*!/
 
-/*vec2 warp=vec2(1.0/32.0, 1.0/24.0);
+/!*vec2 warp=vec2(1.0/32.0, 1.0/24.0);
 
 vec2 Warp(vec2 pos){
     pos=pos*2.0-1.0;
     pos*=vec2(1.0+(pos.y*pos.y)*warp.x, 1.0+(pos.x*pos.x)*warp.y);
     return pos*0.5+0.5;
-}*/
+}*!/
 
 void main()
 {
-    /*vec2 tc = TEX0.xy;
+    /!*vec2 tc = TEX0.xy;
 
     // Distance from the center
     float dx = abs(0.5-tc.x);
@@ -110,16 +110,16 @@ void main()
 
     tc.y -= 0.5;
     tc.y *= 1.0 + (dx * 0.2);
-    tc.y += 0.5;*/
+    tc.y += 0.5;*!/
 
     // Get texel, and add in scanline if need be
-    /*vec4 cta = texture(Texture, vec2(tc.x, tc.y));
+    /!*vec4 cta = texture(Texture, vec2(tc.x, tc.y));
 
     cta.rgb += sin(tc.y * SCAN_LINE_MULT) * 0.12;
 
     // Cutoff
     if(tc.y > 1.0 || tc.x < 0.0 || tc.x > 1.0 || tc.y < 0.0)
-        cta = vec4(0.0);*/
+        cta = vec4(0.0);*!/
     vec2 uv = TEX0.xy;
     vec2 crtUV = CRTCurveUV( uv );
     vec4 t = texture(Texture, crtUV);
@@ -131,15 +131,15 @@ void main()
     DrawVignette( color, crtUV );
     DrawScanline( color, uv );
     FragColor = vec4(color, t.w);
-    /*if ( crtUV.x < 0.0 || crtUV.x > 1.0 || crtUV.y < 0.0 || crtUV.y > 1.0 )
+    /!*if ( crtUV.x < 0.0 || crtUV.x > 1.0 || crtUV.y < 0.0 || crtUV.y > 1.0 )
     {
         crtUV = vec2(0.5, 0.5);
     }
-    FragColor = vec4(crtUV, 0.0, 1.0);*/
+    FragColor = vec4(crtUV, 0.0, 1.0);*!/
 //    FragColor = texture(Texture, TEX0);
 //    FragColor = vec4(TEX0.x, 0.0, 0.0, 1.0);
 //    FragColor = texture(Texture, TEX0);
-    /*vec3 oricol = texture( Texture, vec2(q.x,q.y) ).xyz;
+    /!*vec3 oricol = texture( Texture, vec2(q.x,q.y) ).xyz;
     vec3 col;
     float x =  sin(0.3*iTime+uv.y*21.0)*sin(0.7*iTime+uv.y*29.0)*sin(0.3+0.33*iTime+uv.y*31.0)*0.0017;
 
@@ -176,10 +176,10 @@ void main()
     // Remove the next line to stop cross-fade between original and postprocess
     //\tcol = mix( col, oricol, comp );
 
-    fragColor = vec4(col,1.0);*/
+    fragColor = vec4(col,1.0);*!/
 }
 
-`
+`*/
 
 const texCoord = new Float32Array([
   0.0,  0.0,

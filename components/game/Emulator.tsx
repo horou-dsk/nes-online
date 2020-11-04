@@ -12,13 +12,12 @@ const SCREEN_WIDTH = 256;
 const SCREEN_HEIGHT = 240;
 const FRAMEBUFFER_SIZE = SCREEN_WIDTH*SCREEN_HEIGHT;
 
-interface EmulatorProps {
-  paused: boolean
-}
+// interface EmulatorProps {
+//   paused: boolean
+// }
 
-export default function Emulator(props: EmulatorProps) {
+export default function Emulator() {
 
-  const { paused } = props
 
   const [render, setRender] = useState()
 
@@ -46,6 +45,8 @@ export default function Emulator(props: EmulatorProps) {
   })
 
   useEffect(() => {
+    let paused = false
+
     let imageData = new ImageData(SCREEN_WIDTH, SCREEN_HEIGHT)
 
     const buf = new ArrayBuffer(imageData.data.length)
@@ -96,13 +97,12 @@ export default function Emulator(props: EmulatorProps) {
     // document.addEventListener("keyup", keyboardController.handleKeyUp)
 
     // const socket = new WebSocket('ws://127.0.0.1:9766/')
-    const room = new Room(nes)
+    const room = new Room(nes, _paused => paused = _paused)
 
     const frameTimer = new FrameTimer(
       () => {
         // keyboardController.turbo()
         room.frame()
-        nes.frame()
       },
       () => {
         imageData.data.set(buf8)
@@ -136,7 +136,7 @@ export default function Emulator(props: EmulatorProps) {
 
   return (
     <div className={styles.emulator}>
-      <CanvasScreen ref={glScreen} />
+      <GLScreen ref={glScreen} />
     </div>
   )
 }

@@ -58,12 +58,12 @@ export default class KeyboardController {
 
   private onKeyDown(key: number) {
     this.key_state[key] = 1
-    // this.onButtonDown(this.player, key)
+    this.onButtonDown(this.player, key)
   }
 
   private onKeyUp(key: number) {
     this.key_state[key] = 0
-    // this.onButtonUp(this.player, key)
+    this.onButtonUp(this.player, key)
   }
 
   turbo() {
