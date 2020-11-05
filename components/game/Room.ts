@@ -52,7 +52,7 @@ export default class Room {
     // }
     if (this.paused || this.game_state === GAME_STATE.WAIT) return
     this.socket.send(this.keyboardController.key_state.buffer)
-    this.keyboardController.turbo()
+    this.keyboardController.frame()
     if (this.currentPlayer > 1) {
       if (this.key_buffer.length < MIN_BUFFER_SIZE) {
       }
