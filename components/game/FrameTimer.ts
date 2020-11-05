@@ -6,7 +6,7 @@ export default class FrameTimer {
 
   _requestID = 0
 
-  interval = 1e3 / FPS
+  readonly interval = 1e3 / FPS
 
   lastFrameTime = 0
 

@@ -3,7 +3,7 @@ import RingBuffer from 'ringbufferjs';
 type OnBufferUnderRun = (actualSize: number, desiredSize: number) => void
 
 function WebAudioContext() {
-  return window.AudioContext || window.webkitAudioContext
+  return window.AudioContext || (window as any).webkitAudioContext
 }
 
 export default class Speakers {
