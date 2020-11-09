@@ -25,7 +25,9 @@ export default function Emulator() {
 
   const loadRom = () => new Promise(resolve => {
     const req = new XMLHttpRequest();
-    const path = '/roms/rx.nes'
+    // const path = '/roms/NinjaRyukenden(J).nes'
+    // const path = '/roms/rx.nes'
+    const path = '/roms/Contra (U) [!].nes'
     req.open("GET", path);
     req.overrideMimeType("text/plain; charset=x-user-defined");
     req.onerror = () => console.log(`Error loading ${path}: ${req.statusText}`);

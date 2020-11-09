@@ -41,7 +41,7 @@ export default class KeyboardController {
 
   // 上， 右， 下， 左， select， start， B, A
   // public key_state = [0, 0, 0, 0, 0, 0, 0, 0]
-  public key_state = new Uint8Array(11)
+  public key_state = Array.from(new Uint8Array(11))
 
   constructor(private player: number, private onButtonDown: OnButton, private onButtonUp: OnButton) {
     this.key_state[10] = player
@@ -59,7 +59,7 @@ export default class KeyboardController {
   }
 
   public frame() {
-    this.turbo()
+    // this.turbo()
     this.from_key_state(Array.from(this.key_state))
   }
 
