@@ -31,7 +31,7 @@ export default class Room {
 
   private currentPlayer = 0
 
-  socket = new WebSocket('ws://192.168.5.198:8778/ws')
+  socket = new WebSocket('ws://149.129.78.64:8778/ws')
 
   keyboardController = new KeyboardController(1, this.nes.buttonDown, this.nes.buttonUp)
 
@@ -50,7 +50,7 @@ export default class Room {
     // if (!window.location.search) {
     //   this.socket.send(this.keyboardController.key_state.buffer)
     // }
-    if (this.paused || this.game_state === GAME_STATE.WAIT) return
+    /*if (this.paused || this.game_state === GAME_STATE.WAIT) return
     this.keyboardController.turbo()
     if (this.currentPlayer === 1) {
       this.keyboardController.frame()
@@ -82,7 +82,16 @@ export default class Room {
       ua.push(this.keyboardController.key_state)
       this.socket.send(Message({mid: 10, keys: ua}))
       this.nes.frame()
-    }
+    }*/
+  }
+
+  serverFrame(buffer: number[][]) {
+    this.keyboardController.turbo()
+    this.socket.send(Message({mid: 10, keys: this.keyboardController.key_state}))
+    buffer.forEach(value => {
+      this.keyboardController.from_key_state(value);
+    })
+    this.nes.frame();
   }
 
   release() {
@@ -120,7 +129,8 @@ export default class Room {
         }
         break
       case 'SendKeyboard':
-        this.key_buffer.push(value)
+        this.serverFrame(value)
+        // this.key_buffer.push(value)
         // this.keyboardController.from_key_state(1, value)
         break
       case 'GetGameStatus':
