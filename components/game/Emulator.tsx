@@ -7,6 +7,8 @@ import FrameTimer from './FrameTimer'
 import styles from './game.module.css'
 import CanvasScreen from './CanvasScreen'
 import Room from './Room'
+import VirtualKey from './VirtualKey'
+import events from '../../lib/events'
 
 const SCREEN_WIDTH = 256;
 const SCREEN_HEIGHT = 240;
@@ -15,11 +17,11 @@ const FRAMEBUFFER_SIZE = SCREEN_WIDTH*SCREEN_HEIGHT;
 // interface EmulatorProps {
 //   paused: boolean
 // }
-
 export default function Emulator() {
 
-
   const [render, setRender] = useState()
+
+  const [isPhone, setIsPhone] = useState(false)
 
   const glScreen = useRef<{ render: (imageData: ImageData) => void }>()
 
@@ -27,7 +29,7 @@ export default function Emulator() {
     const req = new XMLHttpRequest();
     // const path = '/roms/NinjaRyukenden(J).nes'
     // const path = '/roms/rx.nes'
-    const path = '/roms/Contra (U) [!].nes'
+    const path = '/roms/Nekketsu Monogatari (J).nes'
     req.open("GET", path);
     req.overrideMimeType("text/plain; charset=x-user-defined");
     req.onerror = () => console.log(`Error loading ${path}: ${req.statusText}`);
@@ -47,6 +49,10 @@ export default function Emulator() {
   })
 
   useEffect(() => {
+    const sUserAgent = navigator.userAgent
+
+    setIsPhone(sUserAgent.indexOf('Android') > -1 || sUserAgent.indexOf('iPhone') > -1 || sUserAgent.indexOf('iPad') > -1 || sUserAgent.indexOf('iPod') > -1 || sUserAgent.indexOf('Symbian') > -1)
+
     let paused = false
 
     let imageData = new ImageData(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -100,7 +106,12 @@ export default function Emulator() {
 
     // const socket = new WebSocket('ws://127.0.0.1:9766/')
     const room = new Room(nes, _paused => paused = _paused)
-
+    events.on('onKeys', (keys: number[]) => {
+      keys.forEach((v, i) => {
+        if (room.keyboardController?.key_state)
+          room.keyboardController.key_state[i] = v
+      })
+    })
     const frameTimer = new FrameTimer(
       () => {
         // keyboardController.turbo()
@@ -136,9 +147,16 @@ export default function Emulator() {
     }
   }, [])
 
+  console.log(isPhone)
+
   return (
-    <div className={styles.emulator}>
-      <GLScreen ref={glScreen} />
+    <div className={styles.emulatorMain}>
+      <div className={isPhone ? styles.phoneEmulator : styles.emulator}>
+        <GLScreen ref={glScreen} />
+      </div>
+      {isPhone && <VirtualKey onChange={keys => {
+        events.emit('onKeys', keys)
+      }} />}
     </div>
   )
 }

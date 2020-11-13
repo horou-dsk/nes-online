@@ -39,7 +39,7 @@ export default class KeyboardController {
 
   private keys = KEYS
 
-  // 上， 右， 下， 左， select， start， B, A
+  // A, B, SELECT, START, 上, 下, 左, 右
   // public key_state = [0, 0, 0, 0, 0, 0, 0, 0]
   public key_state = Array.from(new Uint8Array(11))
 

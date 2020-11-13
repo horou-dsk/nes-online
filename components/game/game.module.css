@@ -3,6 +3,17 @@
     height: 100%;
 }
 
+.emulatorMain {
+    display: flex;
+    flex: 1;
+    align-items: center;
+}
+
 .emulator {
     width: 50vw;
+}
+
+.phoneEmulator {
+    transform: rotate(90deg);
+    width: 100vw;
 }
