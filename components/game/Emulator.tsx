@@ -23,13 +23,17 @@ export default function Emulator() {
 
   const [isPhone, setIsPhone] = useState(false)
 
+  const [fps, setFps] = useState(0)
+
+  const [key_record, setKeyRecord] = useState<number[][]>([])
+
   const glScreen = useRef<{ render: (imageData: ImageData) => void }>()
 
   const loadRom = () => new Promise(resolve => {
     const req = new XMLHttpRequest();
     // const path = '/roms/NinjaRyukenden(J).nes'
     // const path = '/roms/rx.nes'
-    const path = '/roms/Nekketsu Monogatari (J).nes'
+    const path = '/roms/Contra (U) [!].nes'
     req.open("GET", path);
     req.overrideMimeType("text/plain; charset=x-user-defined");
     req.onerror = () => console.log(`Error loading ${path}: ${req.statusText}`);
@@ -133,8 +137,9 @@ export default function Emulator() {
         frameTimer.start()
         window.addEventListener('click', onWindowClick)
         setInterval(() => {
-          console.log(`FPS: ${nes.getFPS()}`)
-          // console.log(keyboardController.key_state)
+          setKeyRecord(room.key_record)
+          setFps(Math.floor(nes.getFPS()))
+          // console.log(`FPS: ${nes.getFPS()}`)
         }, 1000)
       })
     return () => {
@@ -147,12 +152,15 @@ export default function Emulator() {
     }
   }, [])
 
-  console.log(isPhone)
-
   return (
     <div className={styles.emulatorMain}>
+      <div className={styles.keyRecord}>
+        {key_record.map(v => v.toString() + '  ')}
+      </div>
       <div className={isPhone ? styles.phoneEmulator : styles.emulator}>
-        <GLScreen ref={glScreen} />
+        {/*<GLScreen ref={glScreen} />*/}
+        <CanvasScreen ref={glScreen} />
+        <div className={styles.fps}>FPS:{fps}</div>
       </div>
       {isPhone && <VirtualKey onChange={keys => {
         events.emit('onKeys', keys)

@@ -73,5 +73,7 @@ export default class FrameTimer {
       }, (i * timeToNextFrame) / numFrames);
     }
     if (numFrames > 1) console.log("SKIP", numFrames - 1, this.lastFrameTime);
+
+    this.lastFrameTime = newFrameTime
   }
 }

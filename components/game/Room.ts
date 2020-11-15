@@ -34,7 +34,7 @@ export default class Room {
   private isBuffering = false
   // socket = new WebSocket('ws://149.129.78.64:8778/ws')
 
-  socket = new WebSocket('ws://192.168.5.198:8778/ws')
+  socket = new WebSocket('ws://192.168.0.103:8778/ws')
 
   // socket = new WebSocket('ws://47.108.64.61:9699/ws')
 
@@ -42,10 +42,14 @@ export default class Room {
 
   key_buffer: number[][][] = []
 
+  key_record: number[][] = [[], Array.from(new Uint8Array(10)), Array.from(new Uint8Array(10))]
+
   constructor(private nes: any, private onPaused: (paused: boolean) => void) {
     this.socket.addEventListener('open', this.on_open)
     this.socket.addEventListener('close', this.on_close)
     this.socket.addEventListener('message', this.on_message)
+    document.addEventListener("keydown", event => this.keyboardController.handleKeyDown(event))
+    document.addEventListener("keyup", event => this.keyboardController.handleKeyUp(event))
     document.addEventListener('click', () => {
       // this.paused = !this.paused
     })
@@ -54,29 +58,36 @@ export default class Room {
   runFrame() {
     const key_state = this.key_buffer.shift()
     if(key_state) {
-      key_state.forEach(state => this.keyboardController.from_key_state(state))
+      key_state.forEach(state => {
+        this.key_record[state[10]] = this.key_record[state[10]]?.map((v, i) => v + state[i])
+        this.keyboardController.from_key_state(state)
+      })
     }
     this.nes.frame()
   }
 
   frame() {
-    if (this.paused || this.game_state === GAME_STATE.WAIT) return
+    // if (this.paused || this.game_state === GAME_STATE.WAIT) return
+    // this.keyboardController.turbo()
+    // this.socket.send(Message({mid: 10, keys: this.keyboardController.key_state}))
+    //
+    // if (this.key_buffer.length < MIN_BUFFER_SIZE) {
+    //   this.isBuffering = true
+    //   return
+    // }
+    //
+    // if (this.key_buffer.length > MAX_BUFFER_SIZE) {
+    //   for (let i = 0; i < this.key_buffer.length - MAX_BUFFER_SIZE; i++) {
+    //     this.runFrame()
+    //   }
+    // }
+    //
+    // if (this.isBuffering && this.key_buffer.length < MAX_BUFFER_SIZE) return
+    // else this.runFrame()
+
     this.keyboardController.turbo()
-    this.socket.send(Message({mid: 10, keys: this.keyboardController.key_state}))
-
-    if (this.key_buffer.length < MIN_BUFFER_SIZE) {
-      this.isBuffering = true
-      return
-    }
-
-    if (this.key_buffer.length > MAX_BUFFER_SIZE) {
-      for (let i = 0; i < this.key_buffer.length - MAX_BUFFER_SIZE; i++) {
-        this.runFrame()
-      }
-    }
-
-    if (this.isBuffering && this.key_buffer.length < MAX_BUFFER_SIZE) return
-    else this.runFrame()
+    this.keyboardController.frame()
+    this.nes.frame()
 
     /*if (this.currentPlayer === 1) {
       this.keyboardController.frame()
@@ -146,13 +157,11 @@ export default class Room {
       case 'GameReady':
         this.currentPlayer = value
         this.keyboardController = new KeyboardController(value, this.nes.buttonDown, this.nes.buttonUp)
-        document.addEventListener("keydown", this.keyboardController.handleKeyDown)
-        document.addEventListener("keyup", this.keyboardController.handleKeyUp)
         if (value === 1) {
-          this.socket.send(Message({ mid: 4 }))
+          // this.socket.send(Message({ mid: 4 }))
           // this.game_state = GAME_STATE.PLAYING
         } else {
-          // this.socket.send(Message({ mid: 4 }))
+          this.socket.send(Message({ mid: 4 }))
         }
         break
       case 'SendKeyboard':

@@ -14,8 +14,8 @@ const KEYS = {
   83: [1, Controller.BUTTON_DOWN, "S"], // Down
   65: [1, Controller.BUTTON_LEFT, "A"], // Left
   68: [1, Controller.BUTTON_RIGHT, "D"], // Right
-  73: [1, Controller.BUTTON_A, "I", true], // TurboA
-  85: [1, Controller.BUTTON_B, "U", true], // TurboB
+  73: [1, 8, "I", true], // TurboA
+  85: [1, 9, "U", true], // TurboB
   // p2
   103: [2, Controller.BUTTON_A, "Num-7"], // Num-7
   105: [2, Controller.BUTTON_B, "Num-9"], // Num-9
@@ -49,7 +49,7 @@ export default class KeyboardController {
 
   public from_key_state(key_state: number[]) {
     const player = key_state[10]
-    for (let k in key_state) {
+    for (let k in key_state.slice(0, 8)) {
       if (key_state[k]) {
         this.onButtonDown(player, Number(k))
       } else {
@@ -74,6 +74,20 @@ export default class KeyboardController {
   }
 
   turbo() {
+    for(let i = 8; i < 10; i++) {
+      if(this.key_state[i] === 1) {
+        this.key_state[i - 8] = 1
+        this.key_state[i] = 2
+      } else if(this.key_state[i] === 2) {
+        this.key_state[i] = 1
+        this.key_state[i - 8] = 0
+      } else if(this.key_state[i] === 0){
+        this.key_state[i] = 3
+        this.key_state[i - 8] = 0
+      }
+    }
+  }
+/*  turbo() {
     const currentTime = Date.now();
     const deltaTime = currentTime - this.lastUpdateTime;
     for(let code of this.turboKeys) {
@@ -85,20 +99,21 @@ export default class KeyboardController {
         this.onKeyUp(key[1]);
       }
     }
-  }
+  }*/
 
   public handleKeyDown = (e: KeyboardEvent) => {
     const code = e.keyCode as KeysK
     const key = this.keys[code];
     if (key) {
-      if (key[3]) {
-        if (!this.turboKeys.has(code)) {
-          this.onKeyDown(key[1]);
-          this.turboKeys.add(code);
-        }
-      } else {
-        this.onKeyDown(key[1]);
-      }
+      this.onKeyDown(key[1])
+      // if (key[3]) {
+      //   if (!this.turboKeys.has(code)) {
+      //     this.onKeyDown(key[1]);
+      //     this.turboKeys.add(code);
+      //   }
+      // } else {
+      //   this.onKeyDown(key[1]);
+      // }
       e.preventDefault();
     }
   }
@@ -108,9 +123,9 @@ export default class KeyboardController {
     const key = this.keys[code];
     if (key) {
       this.onKeyUp(key[1]);
-      if (key[3] && this.turboKeys.has(code)) {
-        this.turboKeys.delete(code)
-      }
+      // if (key[3] && this.turboKeys.has(code)) {
+      //   this.turboKeys.delete(code)
+      // }
       e.preventDefault();
     }
   }

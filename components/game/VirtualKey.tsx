@@ -16,7 +16,7 @@ function VirtualKey(props: VirtualKeyProps) {
   const [{x, y}, setXy] = useState({x: 0, y: 0})
 
   // A, B, SELECT, START, 上, 下, 左, 右
-  const [key_state, setKeyState] = useState(Array.from(new Uint8Array(8)))
+  const [key_state, setKeyState] = useState(Array.from(new Uint8Array(10)))
 
   const handleTouchMove: TouchEventHandler = (event) => {
     const touch = event.touches[0]
@@ -26,6 +26,7 @@ function VirtualKey(props: VirtualKeyProps) {
     const angle = Math.atan2(y, x)
     const wz = angle / Math.PI * 180
     const _size = Math.min(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)), size)
+    if (_size < size / 2) return setKeyState(key_state.slice(0, 4).concat([0, 0, 0, 0]))
     setXy({x: Math.cos(angle) * _size, y: Math.sin(angle) * _size})
     const keys = [0, 0, 0, 0]
     if (wz < 30 && wz > -30) {
@@ -61,7 +62,7 @@ function VirtualKey(props: VirtualKeyProps) {
   }
 
   const handleTouchEnd: TouchEventHandler = (event) => {
-    onChange(key_state.slice(0, 4).concat([0, 0, 0, 0]))
+    setKeyState(key_state.slice(0, 4).concat([0, 0, 0, 0]))
     setXy({x: 0, y: 0})
   }
 
@@ -104,23 +105,31 @@ function VirtualKey(props: VirtualKeyProps) {
         className={styles.select}
       >选择</div>
       <div
+        onTouchStart={handleKey(9, 1)}
+        onTouchEnd={handleKey(9, 0)}
+        className={styles.turboB}
+      >
+        B
+      </div>
+      <div
+        onTouchStart={handleKey(8, 1)}
+        onTouchEnd={handleKey(8, 0)}
+        className={styles.turboA}
+      >
+        A
+      </div>
+      <div
         onTouchStart={handleKey(1, 1)}
         onTouchEnd={handleKey(1, 0)}
-        className={styles.turboB}
+        className={styles.B}
       >
         B
       </div>
       <div
         onTouchStart={handleKey(0, 1)}
         onTouchEnd={handleKey(0, 0)}
-        className={styles.turboA}
+        className={styles.A}
       >
-        A
-      </div>
-      <div className={styles.B}>
-        B
-      </div>
-      <div className={styles.A}>
         A
       </div>
     </div>
