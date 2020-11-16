@@ -96,3 +96,9 @@
     left: 40px;
     bottom: 30px;
 }
+
+.AB {
+    composes: btn1;
+    left: 185px;
+    bottom: 70px;
+}

@@ -79,9 +79,9 @@ export default class Speakers {
     let size = left.length;
 
     // We're going to buffer underrun. Attempt to fill the buffer.
-    if (this.buffer.size() < size * 2 && this.onBufferUnderrun) {
-      this.onBufferUnderrun(this.buffer.size(), size * 2);
-    }
+    // if (this.buffer.size() < size * 2 && this.onBufferUnderrun) {
+    //   this.onBufferUnderrun(this.buffer.size(), size * 2);
+    // }
     let samples: number[]
     try {
       samples = this.buffer.deqN(size * 2);

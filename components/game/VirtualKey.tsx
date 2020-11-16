@@ -26,7 +26,7 @@ function VirtualKey(props: VirtualKeyProps) {
     const angle = Math.atan2(y, x)
     const wz = angle / Math.PI * 180
     const _size = Math.min(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)), size)
-    if (_size < size / 2) return setKeyState(key_state.slice(0, 4).concat([0, 0, 0, 0]))
+    if (_size < size / 3.4) return setKeyState(key_state.slice(0, 4).concat([0, 0, 0, 0]))
     setXy({x: Math.cos(angle) * _size, y: Math.sin(angle) * _size})
     const keys = [0, 0, 0, 0]
     if (wz < 30 && wz > -30) {
@@ -68,6 +68,12 @@ function VirtualKey(props: VirtualKeyProps) {
 
   const handleKey = (key: number, v: number) => () => {
     key_state[key] = v
+    onChange(key_state)
+  }
+
+  const handleAb = (v: number) => () => {
+    key_state[0] = v
+    key_state[1] = v
     onChange(key_state)
   }
 
@@ -131,6 +137,12 @@ function VirtualKey(props: VirtualKeyProps) {
         className={styles.A}
       >
         A
+      </div>
+      <div
+        onTouchStart={handleAb(1)}
+        onTouchEnd={handleAb(0)}
+        className={styles.AB}>
+        AB
       </div>
     </div>
   )

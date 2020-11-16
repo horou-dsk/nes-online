@@ -31,9 +31,9 @@ export default function Emulator() {
 
   const loadRom = () => new Promise(resolve => {
     const req = new XMLHttpRequest();
-    // const path = '/roms/NinjaRyukenden(J).nes'
+    const path = '/roms/Nekketsu Monogatari (J).nes'
     // const path = '/roms/rx.nes'
-    const path = '/roms/Contra (U) [!].nes'
+    // const path = '/roms/Contra (U) [!].nes'
     req.open("GET", path);
     req.overrideMimeType("text/plain; charset=x-user-defined");
     req.onerror = () => console.log(`Error loading ${path}: ${req.statusText}`);
@@ -116,10 +116,11 @@ export default function Emulator() {
           room.keyboardController.key_state[i] = v
       })
     })
+    const local = !location.search
     const frameTimer = new FrameTimer(
       () => {
-        // keyboardController.turbo()
-        room.frame()
+        if (local) room.localFrame()
+        else room.frame()
       },
       () => {
         imageData.data.set(buf8)
@@ -158,8 +159,8 @@ export default function Emulator() {
         {key_record.map(v => v.toString() + '  ')}
       </div>
       <div className={isPhone ? styles.phoneEmulator : styles.emulator}>
-        {/*<GLScreen ref={glScreen} />*/}
-        <CanvasScreen ref={glScreen} />
+        <GLScreen ref={glScreen} />
+        {/*<CanvasScreen ref={glScreen} />*/}
         <div className={styles.fps}>FPS:{fps}</div>
       </div>
       {isPhone && <VirtualKey onChange={keys => {

@@ -24,12 +24,18 @@ function Test() {
       let numFrames = Math.round(
         (newFrameTime - lastFrameTime) / interval
       )
-      lastFrameTime = newFrameTime
       if (numFrames < 1) return
       fps ++
+      lastFrameTime += interval
     }
     requestAnimationFrame(step)
   }, [])
+  // useEffect(() => {
+  //   let buffer = [1, 23, 262, 23, 25, 0]
+  //   for (let i = 0; i < buffer.length; i++) {
+  //     console.log(buffer.shift())
+  //   }
+  // }, [])
   return (
     <div>
       <Head>

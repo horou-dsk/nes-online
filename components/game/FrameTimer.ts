@@ -66,14 +66,14 @@ export default class FrameTimer {
     // onAnimationFrame call.
     // additional frames are generated but not displayed
     // until next frame draw
-    let timeToNextFrame = this.interval - excess;
-    for (let i = 1; i < numFrames; i++) {
-      setTimeout(() => {
-        this.generateFrame();
-      }, (i * timeToNextFrame) / numFrames);
-    }
-    if (numFrames > 1) console.log("SKIP", numFrames - 1, this.lastFrameTime);
+    // let timeToNextFrame = this.interval - excess;
+    // for (let i = 1; i < numFrames; i++) {
+    //   setTimeout(() => {
+    //     this.generateFrame();
+    //   }, (i * timeToNextFrame) / numFrames);
+    // }
+    // if (numFrames > 1) console.log("SKIP", numFrames - 1, this.lastFrameTime);
 
-    this.lastFrameTime = newFrameTime
+    // this.lastFrameTime = newFrameTime
   }
 }
