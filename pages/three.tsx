@@ -24,13 +24,23 @@ function Three() {
     // const cube = new THREE.Mesh( geometry, material );
     // scene.add( cube );
 
-    camera.position.z = 10;
+    // White directional light at half intensity shining from the top.
+    // const directionalLight = new THREE.DirectionalLight( 0xffffff, 10 );
+    // directionalLight.position.set(0, 1, 0);
+    // scene.add( directionalLight );
+
+    const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 5 );
+    scene.add( light );
+
+    camera.position.z = 5;
+
+    // camera.rotation.y = 1;
 
     GLTFLoader().then(({GLTFLoader}) => {
       const loader = new GLTFLoader();
       loader.load('/Textures/old_tv/scene.gltf', function (gltf) {
         // gltf.scene.scale.set(10, 10, 10)
-        gltf.scene.scale.multiplyScalar(10)
+        // gltf.scene.scale.multiplyScalar(10)
         console.log(gltf)
         scene.add(gltf.scene)
       }, undefined, function ( error ) {
