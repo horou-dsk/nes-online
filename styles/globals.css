@@ -1,3 +1,5 @@
+@import "nes.min.css";
+
 html,
 body {
   padding: 0;
@@ -6,7 +8,7 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   height: 100%;
 
-  background-color: #000000;
+  background-color: #000000 !important;
   color: white;
   overflow: hidden;
   overscroll-behavior: none;

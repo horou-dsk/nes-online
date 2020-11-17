@@ -1,4 +1,5 @@
 import KeyboardController from './KeyboardController'
+import events from '../../lib/events'
 
 // type OnButton = (player: number, keyCode: number) => void
 
@@ -58,6 +59,13 @@ export default class Room {
     //     this.socket.send(Message({ mid: 7 }))
     //   }
     // })
+    events.on('nes-load', () => {
+      this.nes.fromJSON(JSON.parse(localStorage.getItem('nes-json') ?? ''))
+    })
+    events.on('nes-save', () => {
+      localStorage.setItem('nes-json', JSON.stringify(this.nes.toJSON()))
+      console.log('存档成功')
+    })
   }
 
   runFrame() {
@@ -98,37 +106,6 @@ export default class Room {
     if (this.isBuffering && this.key_buffer.length < MAX_BUFFER_SIZE) return
     else this.runFrame()
 
-    /*if (this.currentPlayer === 1) {
-      this.keyboardController.frame()
-    }
-    if (this.currentPlayer > 1) {
-      this.socket.send(Message({mid: 10, keys: [this.keyboardController.key_state]}))
-      if (this.key_buffer.length < MIN_BUFFER_SIZE) {
-      }
-      if (this.key_buffer.length > MAX_BUFFER_SIZE) {
-
-      }
-      for (let i = 0; i < this.key_buffer.length - MAX_BUFFER_SIZE; i++) {
-        const key_state = this.key_buffer.shift()
-        if(key_state) {
-          key_state.forEach(state => this.keyboardController.from_key_state(state))
-        }
-        this.nes.frame()
-      }
-    } else {
-      // for (let i = 0; i < this.key_buffer.length; i ++) {
-      //
-      // }
-      const key_state = this.key_buffer.shift()
-      let ua = []
-      if (key_state) {
-        this.keyboardController.from_key_state(key_state[0])
-        ua.push(key_state[0])
-      }
-      ua.push(this.keyboardController.key_state)
-      this.socket.send(Message({mid: 10, keys: ua}))
-      this.nes.frame()
-    }*/
   }
 
   // serverFrame(buffer: number[][]) {
@@ -143,6 +120,8 @@ export default class Room {
   release() {
     document.removeEventListener('keydown', this.keyboardController.handleKeyDown)
     document.removeEventListener('keyup', this.keyboardController.handleKeyUp)
+    events.removeAllListeners('nes-load')
+    events.removeAllListeners('nes-save')
   }
 
   on_open = () => {

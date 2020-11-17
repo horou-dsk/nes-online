@@ -9,14 +9,12 @@ import CanvasScreen from './CanvasScreen'
 import Room from './Room'
 import VirtualKey from './VirtualKey'
 import events from '../../lib/events'
+import Controls from './Controls'
 
 const SCREEN_WIDTH = 256;
 const SCREEN_HEIGHT = 240;
 const FRAMEBUFFER_SIZE = SCREEN_WIDTH*SCREEN_HEIGHT;
 
-// interface EmulatorProps {
-//   paused: boolean
-// }
 export default function Emulator() {
 
   const [render, setRender] = useState()
@@ -31,8 +29,8 @@ export default function Emulator() {
 
   const loadRom = () => new Promise(resolve => {
     const req = new XMLHttpRequest();
-    const path = '/roms/Nekketsu Monogatari (J).nes'
-    // const path = '/roms/rx.nes'
+    // const path = '/roms/Nekketsu Monogatari (J).nes'
+    const path = '/roms/rx.nes'
     // const path = '/roms/Contra (U) [!].nes'
     req.open("GET", path);
     req.overrideMimeType("text/plain; charset=x-user-defined");
@@ -111,10 +109,8 @@ export default function Emulator() {
     // const socket = new WebSocket('ws://127.0.0.1:9766/')
     const room = new Room(nes, _paused => paused = _paused)
     events.on('onKeys', (keys: number[]) => {
-      keys.forEach((v, i) => {
-        if (room.keyboardController?.key_state)
-          room.keyboardController.key_state[i] = v
-      })
+      const key_state = room.keyboardController?.key_state
+      keys.forEach((v, i) => {key_state[i] = v})
     })
     const local = !location.search
     const frameTimer = new FrameTimer(
@@ -127,13 +123,11 @@ export default function Emulator() {
         glScreen.current?.render(imageData)
       }
     )
-    console.log('ooo======================================================o');
     const onWindowClick = () => {
       speakers.start()
     }
     loadRom()
       .then((rom) => {
-        // console.log(rom)
         nes.loadROM(rom)
         frameTimer.start()
         window.addEventListener('click', onWindowClick)
@@ -145,8 +139,6 @@ export default function Emulator() {
       })
     return () => {
       window.removeEventListener('click', onWindowClick)
-      // document.removeEventListener('keydown', keyboardController.handleKeyDown)
-      // document.removeEventListener('keyup', keyboardController.handleKeyUp)
       room.release()
       frameTimer.stop()
       speakers.stop()
@@ -166,6 +158,7 @@ export default function Emulator() {
       {isPhone && <VirtualKey onChange={keys => {
         events.emit('onKeys', keys)
       }} />}
+      <Controls />
     </div>
   )
 }
