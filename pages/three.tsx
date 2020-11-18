@@ -13,7 +13,7 @@ function Three() {
 
   useEffect(() => {
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -24,15 +24,32 @@ function Three() {
     // const cube = new THREE.Mesh( geometry, material );
     // scene.add( cube );
 
+    const ambientLight = new THREE.AmbientLight(0xFFFFFF);
+    scene.add(ambientLight);
+
     // White directional light at half intensity shining from the top.
     // const directionalLight = new THREE.DirectionalLight( 0xffffff, 10 );
     // directionalLight.position.set(0, 1, 0);
     // scene.add( directionalLight );
 
-    const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 5 );
+    const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
     scene.add( light );
 
     camera.position.z = 5;
+
+    let rotateY = 0.01;
+    window.addEventListener('keydown', () => {
+      camera.rotateX(rotateY);
+      rotateY += 0.01;
+    })
+
+    window.addEventListener('wheel', (event) => {
+      if (event.deltaY < 0) {
+        camera.position.z -= 0.5;
+      } else {
+        camera.position.z += 0.5;
+      }
+    })
 
     // camera.rotation.y = 1;
 
@@ -43,6 +60,7 @@ function Three() {
         // gltf.scene.scale.multiplyScalar(10)
         console.log(gltf)
         scene.add(gltf.scene)
+        camera.lookAt(gltf.scene.position)
       }, undefined, function ( error ) {
 
         console.error( error );
