@@ -30,8 +30,8 @@ export default function Emulator() {
 
   const loadRom = () => new Promise(resolve => {
     const req = new XMLHttpRequest();
-    const path = '/roms/Nekketsu Monogatari (J).nes'
-    // const path = '/roms/rx.nes'
+    // const path = '/roms/Nekketsu Monogatari (J).nes'
+    const path = '/roms/rx.nes'
     // const path = '/roms/Contra (U) [!].nes'
     req.open("GET", path);
     req.overrideMimeType("text/plain; charset=x-user-defined");
@@ -148,13 +148,13 @@ export default function Emulator() {
 
   return (
     <div className={styles.emulatorMain}>
-      <div className={styles.keyRecord}>
+      {/*<div className={styles.keyRecord}>
         {key_record.map(v => v.toString() + '  ')}
-      </div>
+      </div>*/}
       <div className={isPhone ? styles.phoneEmulator : styles.emulator}>
-        {/*<ThreeScreen ref={glScreen} />*/}
+        <ThreeScreen ref={glScreen} />
         {/*<GLScreen ref={glScreen} />*/}
-        <CanvasScreen ref={glScreen} />
+        {/*<CanvasScreen ref={glScreen} />*/}
         <div className={styles.fps}>FPS:{fps}</div>
       </div>
       {isPhone && <VirtualKey onChange={keys => {

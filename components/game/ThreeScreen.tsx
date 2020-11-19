@@ -4,6 +4,8 @@ import styles from './game.module.css'
 import vertex from './shader/three-crt/vertex.glsl'
 import fragment from './shader/three-crt/fragment.glsl'
 
+const GLTFLoader = () => import('three/examples/jsm/loaders/GLTFLoader')
+
 const ImportOrbitControls = () => import('three/examples/jsm/controls/OrbitControls')
 
 const SCREEN_WIDTH = 256 * 4;
@@ -54,11 +56,47 @@ function ThreeScreen(props: any, ref: ((instance: unknown) => void) | React.RefO
       controls.maxDistance = 15;
     });
 
+    GLTFLoader().then(({GLTFLoader}) => {
+      const loader = new GLTFLoader();
+      loader.load('/Textures/old_tv/scene.gltf', function (gltf) {
+        scene.add(gltf.scene)
+      }, undefined, function ( error ) {
+
+        console.error( error );
+
+      });
+    })
+
     const dataTexture = new THREE.DataTexture(new Uint8ClampedArray(), SCREEN_WIDTH, SCREEN_HEIGHT, THREE.RGBFormat);
     dataTexture.needsUpdate = true;
     setTexture(dataTexture);
+
+    // 图片取值坐标
+    const texCoord = new Float32Array([
+      0.0,  0.0,
+      1.0,  0.0,
+      1.0,  1.0,
+      1.0,  1.0,
+      0.0,  1.0,
+      0.0,  0.0
+    ]);
+    // 贴图顶点坐标
+    const vertices = new Float32Array( [
+      -1.0, -1.0,  1.0,
+      1.0, -1.0,  1.0,
+      1.0,  1.0,  1.0,
+
+      1.0,  1.0,  1.0,
+      -1.0,  1.0,  1.0,
+      -1.0, -1.0,  1.0
+    ] );
     // const texture = new THREE.TextureLoader().load('Textures/wallhaven-n61px0.jpg')
-    const geometry = new THREE.BoxGeometry();
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+    geometry.setAttribute('uv', new THREE.Float32BufferAttribute(texCoord, 2));
+    geometry.scale(.6, .48, 1);
+    geometry.translate(-0.18, .08, -.25);
+    // const geometry = new THREE.BoxGeometry();
     // const material = new THREE.MeshBasicMaterial();
     const material = new THREE.ShaderMaterial({
       uniforms: {
