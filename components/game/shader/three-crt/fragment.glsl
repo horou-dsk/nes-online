@@ -77,5 +77,6 @@ void main()
     DrawVignette( color, crtUV );
     DrawScanline( color, uv );
     FragColor = vec4(color, t.w);
-//    FragColor = vec4(1, 0, 0, 1);
+//    FragColor = vec4(1, 1, 1, 1);
+//    FragColor = texture(Texture, TEX0.xy);
 }

@@ -43,7 +43,7 @@ function Three() {
     ImportOrbitControls().then(({ OrbitControls }) => {
       const controls = new OrbitControls( camera, domElem );
       controls.maxPolarAngle = Math.PI;
-      controls.minDistance = 5;
+      controls.minDistance = 1;
       controls.maxDistance = 15;
     })
 
