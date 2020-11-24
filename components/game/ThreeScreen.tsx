@@ -5,12 +5,12 @@ import vertex from './shader/three-crt/vertex.glsl'
 import fragment from './shader/three-crt/fragment.glsl'
 import {getSurfacePointFn} from './NurbsSurface'
 
-const GLTFLoader = () => import('three/examples/jsm/loaders/GLTFLoader')
+const ImportGLTFLoader = () => import('three/examples/jsm/loaders/GLTFLoader')
 
 const ImportOrbitControls = () => import('three/examples/jsm/controls/OrbitControls')
 
-const SCREEN_WIDTH = 256 * 5;
-const SCREEN_HEIGHT = 240 * 5;
+const SCREEN_WIDTH = 256 * 4;
+const SCREEN_HEIGHT = 240 * 4;
 
 function ThreeScreen(props: any, ref: ((instance: unknown) => void) | React.RefObject<unknown> | null | undefined) {
 
@@ -58,23 +58,20 @@ function ThreeScreen(props: any, ref: ((instance: unknown) => void) | React.RefO
         controls.maxDistance = 16;
       });
 
-      GLTFLoader().then(({GLTFLoader}) => {
-        const loader = new GLTFLoader();
-        loader.load('/Textures/old_tv/scene.gltf', function (gltf) {
-          // scene.add(gltf.scene)
-        }, undefined, function ( error ) {
-
-          console.error( error );
-
-        });
-      })
-
       const dataTexture = new THREE.DataTexture(
-        new Uint8Array(), SCREEN_WIDTH, SCREEN_HEIGHT
+        new ImageData(SCREEN_WIDTH, SCREEN_HEIGHT).data, SCREEN_WIDTH, SCREEN_HEIGHT
       );
       dataTexture.flipY = true;
       // dataTexture.needsUpdate = true;
-      setTexture(dataTexture);
+
+      const {GLTFLoader} = await ImportGLTFLoader();
+      const loader = new GLTFLoader();
+      loader.load('/Textures/old_tv/scene.gltf', function (gltf) {
+        scene.add(gltf.scene)
+        setTexture(dataTexture);
+      }, undefined, function ( error ) {
+        console.error( error );
+      });
 
       // 图片取值坐标
       const texCoord = new Float32Array([
