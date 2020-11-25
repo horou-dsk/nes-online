@@ -49,6 +49,18 @@ function ThreeScreen(props: any, ref: ((instance: unknown) => void) | React.RefO
       directionalLight.position.multiplyScalar( 1.3 );
       scene.add(directionalLight);
 
+      const directionalLight1 = new THREE.PointLight( 0xFFFFFF, 1, 300, .5 );
+      directionalLight1.position.set(-25, 100, 50);
+      scene.add(directionalLight1);
+
+      const directionalLight2 = new THREE.PointLight( 0xFFFFFF, 1, 300, .5 );
+      directionalLight2.position.set(-25, -100, 50);
+      scene.add(directionalLight2);
+
+      const directionalLight3 = new THREE.PointLight( 0xFFFFFF, 1, 300, .5 );
+      directionalLight3.position.set(25, -100, 50);
+      scene.add(directionalLight3);
+
       camera.position.z = 3;
 
       ImportOrbitControls().then(({ OrbitControls }) => {
@@ -66,12 +78,35 @@ function ThreeScreen(props: any, ref: ((instance: unknown) => void) | React.RefO
 
       const {GLTFLoader} = await ImportGLTFLoader();
       const loader = new GLTFLoader();
-      loader.load('/Textures/old_tv/scene.gltf', function (gltf) {
-        scene.add(gltf.scene)
+      loader.load('/Textures/try/233.gltf', function (gltf) {
+        const model = gltf.scene;
+        // model.scale.multiplyScalar(.1);
+        scene.add(model)
+        // model.traverse((n) => {
+        //   const mesh = n as THREE.Mesh<THREE.Geometry, THREE.MeshStandardMaterial>;
+        //   if(mesh.isMesh) {
+        //     if (mesh.name === 'defaultMaterial_3') {
+        //       mesh.scale.multiplyScalar(0);
+        //     }
+        //   }
+        // })
         setTexture(dataTexture);
       }, undefined, function ( error ) {
         console.error( error );
       });
+      /*loader.load('/Textures/old_tv/scene.gltf', function (gltf) {
+        const model = gltf.scene
+        model.traverse((n) => {
+          const mesh = n as THREE.Mesh<THREE.Geometry, THREE.MeshStandardMaterial>;
+          if(mesh.isMesh) {
+            if (mesh.name === 'defaultMaterial_3') {
+              mesh.material.opacity = .2;
+              mesh.material.transparent = true;
+              scene.add(mesh);
+            }
+          }
+        })
+      }, undefined, err => {})*/
 
       // 图片取值坐标
       const texCoord = new Float32Array([
@@ -100,7 +135,7 @@ function ThreeScreen(props: any, ref: ((instance: unknown) => void) | React.RefO
       const geometry = new THREE.ParametricBufferGeometry(getSurfacePoint, 16, 16);
       geometry.scale(.64, .50, 1);
       // geometry.scale(.1, .1, .1);
-      geometry.translate(-0.19, .1, .81);
+      geometry.translate(-0.19, .1, .75);
       // const geometry = new THREE.BoxGeometry();
       // const material = new THREE.MeshBasicMaterial();
       const material = new THREE.ShaderMaterial({
