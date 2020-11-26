@@ -133,9 +133,7 @@
     ],
     "materials" : [
         {
-            "alphaCutoff" : 0.5,
-            "alphaMode" : "MASK",
-            "doubleSided" : true,
+            "alphaMode" : "BLEND",
             "emissiveFactor" : [
                 0,
                 0,
@@ -291,8 +289,8 @@
         },
         {
             "mimeType" : "image/png",
-            "name" : "rsMaterial3SG_baseColor-rsMaterial3SG_opacity",
-            "uri" : "rsMaterial3SG_baseColor-rsMaterial3SG_opacity.png"
+            "name" : "rsMaterial3SG_baseColor-ss1",
+            "uri" : "rsMaterial3SG_baseColor-ss1.png"
         },
         {
             "mimeType" : "image/png",
