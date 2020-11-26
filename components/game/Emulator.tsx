@@ -16,7 +16,13 @@ const SCREEN_WIDTH = 256;
 const SCREEN_HEIGHT = 240;
 const FRAMEBUFFER_SIZE = SCREEN_WIDTH*SCREEN_HEIGHT;
 
-export default function Emulator() {
+interface EmulatorProps {
+  path: string
+}
+
+export default function Emulator(props: EmulatorProps) {
+
+  const { path } = props;
 
   const [render, setRender] = useState()
 
@@ -32,8 +38,8 @@ export default function Emulator() {
     const req = new XMLHttpRequest();
     // const path = '/roms/Nekketsu Monogatari (J).nes'
     // const path = '/roms/rx.nes'
-    const path = '/roms/Contra (U) [!].nes'
-    req.open("GET", path);
+    // const path = '/roms/Contra (U) [!].nes'
+    req.open("GET", '/roms/nes/' + path);
     req.overrideMimeType("text/plain; charset=x-user-defined");
     req.onerror = () => console.log(`Error loading ${path}: ${req.statusText}`);
 

@@ -1,5 +1,10 @@
 @import "nes.min.css";
 
+@font-face {
+  font-family: ZpixReview;
+  src: url(https://zpix.now.sh/zpix.woff2?zpix--online);
+}
+
 html,
 body {
   padding: 0;
@@ -31,4 +36,14 @@ a {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+
+/* 设置滚动条的样式 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: white;
 }

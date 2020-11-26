@@ -10,4 +10,31 @@
     flex: 1;
     justify-content: center;
     align-items: center;
+    font-family: "Press Start 2P", ZpixReview, sans-serif;
+}
+
+.box {
+    height: 100vh;
+    overflow: auto;
+}
+
+.gameList {
+    width: 800px;
+}
+
+.gameItem {
+    width: 100%;
+}
+
+.scrollTop {
+    position: absolute;
+    right: 100px;
+    bottom: -60px;
+    font-family: "Press Start 2P", sans-serif;
+    transform: rotate(90deg);
+    transition: .4s;
+}
+
+.scrollTop:global(.active) {
+    bottom: 80px;
 }

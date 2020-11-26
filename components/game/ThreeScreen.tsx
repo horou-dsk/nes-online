@@ -25,12 +25,23 @@ function ThreeScreen(props: any, ref: ((instance: unknown) => void) | React.RefO
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const init = async () => {
+    const init = async (background_texture?: THREE.Texture) => {
       if (!canvasRef.current) return;
       const canvas = canvasRef.current;
       const wgl2 = canvas.getContext('webgl2', { antialias: true });
       if (!wgl2) return;
       const scene = new THREE.Scene();
+      // scene.background = background_texture;
+
+      const cubeRenderTarget = new THREE.WebGLCubeRenderTarget( 256, {
+        format: THREE.RGBFormat,
+        generateMipmaps: true,
+        minFilter: THREE.LinearMipmapLinearFilter,
+        encoding: THREE.sRGBEncoding // temporary -- to prevent the material's shader from recompiling every frame
+      } );
+
+      const cubeCamera1 = new THREE.CubeCamera( 1, 1000, cubeRenderTarget );
+
       const camera = new THREE.PerspectiveCamera( 45, SCREEN_WIDTH / SCREEN_HEIGHT, 0.1, 1000 );
 
       const renderer = new THREE.WebGLRenderer({ canvas, context: wgl2 });
@@ -49,18 +60,6 @@ function ThreeScreen(props: any, ref: ((instance: unknown) => void) | React.RefO
       directionalLight.position.multiplyScalar( 1.3 );
       scene.add(directionalLight);
 
-      const directionalLight1 = new THREE.PointLight( 0xFFFFFF, 1, 300, .5 );
-      directionalLight1.position.set(-25, 100, 50);
-      scene.add(directionalLight1);
-
-      const directionalLight2 = new THREE.PointLight( 0xFFFFFF, 1, 300, .5 );
-      directionalLight2.position.set(-25, -100, 50);
-      scene.add(directionalLight2);
-
-      const directionalLight3 = new THREE.PointLight( 0xFFFFFF, 1, 300, .5 );
-      directionalLight3.position.set(25, -100, 50);
-      scene.add(directionalLight3);
-
       camera.position.z = 3;
 
       ImportOrbitControls().then(({ OrbitControls }) => {
@@ -78,10 +77,17 @@ function ThreeScreen(props: any, ref: ((instance: unknown) => void) | React.RefO
 
       const {GLTFLoader} = await ImportGLTFLoader();
       const loader = new GLTFLoader();
-      loader.load('/Textures/try/233.gltf', function (gltf) {
+      // let tv_material: THREE.MeshStandardMaterial;
+      loader.load('/Textures/try/try.gltf', function (gltf) {
         const model = gltf.scene;
-        // model.scale.multiplyScalar(.1);
+        model.scale.multiplyScalar(7);
         scene.add(model)
+        // model.traverse((n) => {
+        //   const mesh = n as THREE.Mesh<THREE.Geometry, THREE.MeshStandardMaterial>;
+        //   if(mesh.isMesh && !tv_material) {
+        //     tv_material = mesh.material;
+        //   }
+        // })
         // model.traverse((n) => {
         //   const mesh = n as THREE.Mesh<THREE.Geometry, THREE.MeshStandardMaterial>;
         //   if(mesh.isMesh) {
@@ -156,10 +162,18 @@ function ThreeScreen(props: any, ref: ((instance: unknown) => void) | React.RefO
         requestAnimationFrame( animate );
         // cube.rotation.x += 0.01;
         // cube.rotation.y += 0.01;
+        // cubeCamera1.update( renderer, scene );
+        // if (tv_material) tv_material.envMap = cubeRenderTarget.texture;
         renderer.render( scene, camera );
       }
       animate();
     }
+    /*const textureLoader = new THREE.TextureLoader();
+    textureLoader.load('Textures/2294472375_24a3b8ef46_o.jpg', function (texture) {
+      texture.encoding = THREE.sRGBEncoding;
+      texture.mapping = THREE.EquirectangularReflectionMapping;
+      init(texture);
+    })*/
     init();
   }, [canvasRef]);
 
