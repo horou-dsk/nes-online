@@ -63,7 +63,7 @@ export default function Nes() {
             </div>
             <div className={["nes-container is-dark with-title", styles.gameList].join(' ')}>
               <div className="title">GAMES</div>
-              {Object.entries(nes).map(([name, path]) => (!gameName || name.includes(gameName)) ? (
+              {Object.entries(nes).map(([name, path]) => (!gameName || name.toLowerCase().includes(gameName.toLowerCase())) ? (
                 <button key={name} onClick={() => set_game_path(path)} type="button" className={[styles.gameItem, "nes-btn"].join(' ')}>{name}</button>
               ) : null)}
             </div>
