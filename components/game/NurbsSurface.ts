@@ -4,20 +4,20 @@ const angle = -.15, side = -.1;
 
 const nsControlPoints = [
   [
-    new THREE.Vector4( - 1, - 1, angle, 1 ),
-    new THREE.Vector4( - 1, - .5, side, 1 ),
-    new THREE.Vector4( - 1, .5, side, 1 ),
-    new THREE.Vector4( - 1, 1, angle, 1 )
+    new THREE.Vector4( -1, -1, angle, 1 ),
+    new THREE.Vector4( -1, -.5, side, 1 ),
+    new THREE.Vector4( -1, .5, side, 1 ),
+    new THREE.Vector4( -1, 1, angle, 1 )
   ],
   [
-    new THREE.Vector4( 0, - 1, side - .1, 1 ),
-    new THREE.Vector4( 0, - .5, 0, 1 ),
+    new THREE.Vector4( 0, -1, side, 1 ),
+    new THREE.Vector4( 0, -.5, 0, 1 ),
     new THREE.Vector4( 0, .5, 0, 1 ),
-    new THREE.Vector4( 0, 1, side - .04, 1 )
+    new THREE.Vector4( 0, 1, side, 1 )
   ],
   [
-    new THREE.Vector4( 1, - 1, angle, 1 ),
-    new THREE.Vector4( 1, - .5, side, 1 ),
+    new THREE.Vector4( 1, -1, angle, 1 ),
+    new THREE.Vector4( 1, -.5, side, 1 ),
     new THREE.Vector4( 1, .5, side, 1 ),
     new THREE.Vector4( 1, 1, angle, 1 )
   ]

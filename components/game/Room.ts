@@ -8,7 +8,7 @@ function Message(data: {[key: string]: any}) {
 }
 
 const MIN_BUFFER_SIZE = 1
-const MAX_BUFFER_SIZE = 2
+const MAX_BUFFER_SIZE = 1
 
 enum GAME_STATE {
   WAIT,
